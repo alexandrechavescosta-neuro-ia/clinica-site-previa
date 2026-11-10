@@ -25,9 +25,18 @@
   });
   menu.addEventListener('click', function(e){ if (e.target.closest('a')) { menu.classList.remove('aberto'); topo.classList.remove('aberto'); btn.setAttribute('aria-expanded', false); } });
   var alvos = document.querySelectorAll('.rv, .onda');
-  if (reduz || !('IntersectionObserver' in window)) { alvos.forEach(function(el){ el.classList.add('on'); }); return; }
-  var io = new IntersectionObserver(function(es){
-    es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
-  }, {threshold: 0.12, rootMargin: '0px 0px -40px 0px'});
-  alvos.forEach(function(el){ io.observe(el); });
+  if (reduz || !('IntersectionObserver' in window)) {
+    alvos.forEach(function(el){ el.classList.add('on'); });
+  } else {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+    }, {threshold: 0.12, rootMargin: '0px 0px -40px 0px'});
+    alvos.forEach(function(el){ io.observe(el); });
+  }
+  var videos = document.querySelectorAll('video');
+  videos.forEach(function(v){
+    v.addEventListener('play', function(){
+      videos.forEach(function(o){ if (o !== v) o.pause(); });
+    });
+  });
 })();
